@@ -1,0 +1,6 @@
+# requirements
+torch
+tqdm
+numpy
+pandas
+transformers
