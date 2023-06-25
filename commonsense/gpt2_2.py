@@ -64,20 +64,23 @@ def commomsense_test(relation_filename, test_filename, model_name, relation_type
 
     example1_object_1 = 'A cake'
     example1_object_2 = 'eggs'
+    example1_sentence = 'A cake is made of eggs.'
     example2_object_1 = 'A book'
     example2_object_2 = 'paper'
+    example2_sentence = 'A book is made of paper.'
     example3_object_1 = 'Desks'
     example3_object_2 = 'wood'
+    example3_sentence = 'Desks are made of wood.'
     
     _, obj_pair_list = search_concept_pairs(relation_filename, relation_type)
-    relation_label = 'is made of'
-    obj_pair_list = obj_pair_list[138:]
+    relation_label = 'is/are made of'
+    obj_pair_list = obj_pair_list[:]
     for obj_pair in tqdm(obj_pair_list):
         object_1 = obj_pair[0]
         object_1[0].upper()
         object_2 = obj_pair[1]
         
-        example = f"###\nObject 1: {example1_object_1}\nrelation: {relation_label}\nObject 2: {example1_object_2}\n###\nObject 1: {example2_object_1}\nrelation: {relation_label}\nObject 2: {example2_object_2}\n###\nObject 1: {example3_object_1}\nrelation: {relation_label}\nObject 2: {example3_object_2}\n"
+        example = f"###\nObject 1: {example1_object_1}\nrelation: {relation_label}\nObject 2: {example1_object_2}\ncomplete_sentence: {example1_sentence}\n###\nObject 1: {example2_object_1}\nrelation: {relation_label}\nObject 2: {example2_object_2}\ncomplete_sentence: {example2_sentence}\n###\nObject 1: {example3_object_1}\nrelation: {relation_label}\nObject 2: {example3_object_2}\ncomplete_sentence: {example1_sentence}\n"
         question = f'###\nObject 1: {object_1}\nrelation: {relation_label}\nObject 2:'
         prompt = example+question
         
@@ -89,7 +92,7 @@ def commomsense_test(relation_filename, test_filename, model_name, relation_type
      
 def main():
     relation_type = sys.argv[1]
-    commomsense_test('relation.csv', 'MadeOf_few_shot_1.csv', 'gpt2', relation_type)
+    commomsense_test('relation.csv', 'result/MadeOf_few_shot_2.csv', 'gpt2', relation_type)
     return 
              
 if __name__ == "__main__":

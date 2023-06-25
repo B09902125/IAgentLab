@@ -62,23 +62,26 @@ def commomsense_test(relation_filename, test_filename, model_name, relation_type
     config.num_return_sequences = 20
     # set_seed(42)
 
-    example1_object_1 = 'A boy'
-    example1_object_2 = 'toys'
-    example2_object_1 = 'A person'
-    example2_object_2 = 'a work'
-    example3_object_1 = 'People'
-    example3_object_2 = 'peace'
+    example1_object_1 = 'A piece of cake'
+    example1_object_2 = 'eaten'
+    example2_object_1 = 'books'
+    example2_object_2 = 'read'
+    example3_object_1 = 'shoes'
+    example3_object_2 = 'worn on your feet'
     
-    relation_label, obj_pair_list = search_concept_pairs(relation_filename, relation_type)
+    _, obj_pair_list = search_concept_pairs(relation_filename, relation_type)
+    relation_label = 'Receives Action'
     obj_pair_list = obj_pair_list[:]
     for obj_pair in tqdm(obj_pair_list):
         object_1 = obj_pair[0]
         object_1[0].upper()
         object_2 = obj_pair[1]
         
+        guiding = f'Follow the format of the previous three examples which are seperated by "###" to generate the possible object 2 that has some relationshiop[relation] with the object 1.\n'
         example = f"###\nObject 1: {example1_object_1}\nrelation: {relation_label}\nObject 2: {example1_object_2}\n###\nObject 1: {example2_object_1}\nrelation: {relation_label}\nObject 2: {example2_object_2}\n###\nObject 1: {example3_object_1}\nrelation: {relation_label}\nObject 2: {example3_object_2}\n"
         question = f'###\nObject 1: {object_1}\nrelation: {relation_label}\nObject 2:'
-        prompt = example+question
+        
+        prompt = guiding+example+question
         
         generator = pipeline(task='text-generation', model=model_name, generation_config=config)
         generated_sample = generator(prompt)
@@ -88,7 +91,7 @@ def commomsense_test(relation_filename, test_filename, model_name, relation_type
      
 def main():
     relation_type = sys.argv[1]
-    commomsense_test('relation.csv', 'Desires_few_shot_2.csv', 'gpt2', relation_type)
+    commomsense_test('relation.csv', 'result/ReceivesAction_few_shot_1.csv', 'gpt2', relation_type)
     return 
              
 if __name__ == "__main__":
